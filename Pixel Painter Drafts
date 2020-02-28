@@ -121,3 +121,153 @@ void mouseDragged() {
   //3. Define controller functions for RGB sliders
 
   //4. Define controller functions for stroke thickness
+  
+  ======================= Two Color picker
+  /**
+ * ControlP5 Button
+ * this example shows how to create buttons with controlP5.
+ * by Andreas Schlegel, 2012
+ * www.sojamo.de/libraries/controlp5
+ * example modified by Andrew Rose, 2019
+ */
+int grayScale = 0;
+import controlP5.*;
+int redColor = 0;
+int blueColor = 0;
+int greenColor = 0;
+int colorOneRed = 0;
+int colorOneBlue = 0;
+int colorOneGreen = 0;
+int colorTwoRed = 0;
+int colorTwoBlue = 0;
+int colorTwoGreen = 0;
+ControlP5 cp5;
+
+int state; 
+//0: default, no selection
+//1: pencil
+//2: eraser
+
+void setup() {
+  size(400, 600);
+
+  cp5 = new ControlP5(this);
+
+  // create a new button with name 'pencil'
+  cp5.addButton("pencil")
+    .setPosition(100, 100)
+    .setSize(200, 19)
+    ;
+    cp5.addButton("eraser")
+    .setPosition(100, 80)
+    .setSize(200, 19)
+    ;
+    cp5.addSlider("grayScale")
+     .setPosition(100,20)
+     .setRange(0,255)
+       .setValue(128)
+     ;
+         cp5.addButton("colorOne")
+    .setPosition(100, 120)
+    .setSize(200, 19)
+    ;
+     cp5.addButton("colorTwo")
+    .setPosition(100, 140)
+    .setSize(200, 19)
+    ;
+      cp5.addSlider("redColor")
+     .setPosition(100,40)
+     .setRange(0,255)
+     ;
+       cp5.addSlider("greenColor")
+     .setPosition(100,50)
+     .setRange(0,255)
+     ;
+       cp5.addSlider("blueColor")
+     .setPosition(100,60)
+     .setRange(0,255)
+     ;
+
+  // 1. add an eraser button
+
+  // 2. add a slider for grayscale value
+  // use setValue() to set default grayscale value
+  // use setRange() to set a range of values for the slider
+
+  // 3. add sliders for RGB values
+
+  //4. add a slider for stroke thickness
+
+  state = 0;
+}
+
+void draw() {
+  //buffering
+  fill(colorOneRed,colorOneGreen,colorOneBlue);
+  rect(0,350,50,50);
+  
+   fill(colorTwoRed,colorTwoGreen,colorTwoBlue);
+  rect(50,300,50,50);
+}
+
+
+void mouseDragged() {
+  switch(state) {
+  case 0: //Default
+    break;
+  case 1: //Pencil
+    println("drawing");
+    stroke(grayScale);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+    break;
+    case 2: // eraser
+    println("erasing");
+    stroke(205);
+    fill(205);
+    ellipse(mouseX, mouseY, 10, 10);
+    break;
+    case 3: //colorOne
+    println("colorOne");
+    colorOneRed = redColor;
+    colorOneGreen = greenColor;
+    colorOneBlue = blueColor;
+    break;
+    case 4: //colorOne
+    println("colorOne");
+    colorTwoRed = redColor;
+    colorTwoGreen = greenColor;
+    colorTwoBlue = blueColor;
+     
+  }
+  }
+  //called when pencil button is pressed
+  
+  void pencil() {
+    println("pencil");
+    state = 1;
+  }
+    void colorOne() {
+  println("coloring");
+  state=3;
+  println();
+  }
+   void colorTwo() {
+  println("coloring");
+  state=4;
+  println();
+  }
+    void eraser() {
+    println("pencil");
+    state = 2;
+  }
+
+  
+
+  //1. Define a controller function for eraser
+
+  //2. Define a controller function for grayscale slider 
+  //   *use the int value parameter to get the current value of the slider
+
+  //3. Define controller functions for RGB sliders
+
+  //4. Define controller functions for stroke thickness
