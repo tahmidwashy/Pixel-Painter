@@ -1,0 +1,49 @@
+/**
+ * ControlP5 Button
+ * this example shows how to create buttons with controlP5.
+ * by Andreas Schlegel, 2012
+ * www.sojamo.de/libraries/controlp5
+ * example modified by Andrew Rose, 2019
+ */
+int grayScale = 0;
+import controlP5.*;
+int redColor = 0;
+int blueColor = 0;
+int greenColor = 0;
+int thickness=0;
+ControlP5 cp5;
+
+int state; 
+//0: default, no selection
+//1: pencil
+//2: eraser
+
+void setup() {
+  size(400, 600);
+
+  cp5 = new ControlP5(this);
+
+  // create a new button with name 'pencil'
+  cp5.addButton("pencil")
+    .setPosition(100, 100)
+    .setSize(200, 19)
+    ;
+  cp5.addButton("eraser")
+    .setPosition(100, 80)
+    .setSize(200, 19)
+    ;
+  cp5.addSlider("grayScale")
+    .setPosition(100, 20)
+    .setRange(0, 255)
+    .setValue(128)
+    ;
+  cp5.addButton("coloring")
+    .setPosition(100, 120)
+    .setSize(200, 19)
+    ;
+  cp5.addSlider("redColor")
+    .setPosition(100, 40)
+    .setRange(0, 255)
+    ;
+  cp5.addSlider("greenColor")
+    .setPosition(100, 
