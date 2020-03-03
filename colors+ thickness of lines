@@ -46,4 +46,92 @@ void setup() {
     .setRange(0, 255)
     ;
   cp5.addSlider("greenColor")
-    .setPosition(100, 
+    .setPosition(100, 50)
+    .setRange(0, 255)
+    ;
+  cp5.addSlider("blueColor")
+    .setPosition(100, 60)
+    .setRange(0, 255)
+    ;
+  cp5.addSlider("thickness")
+    .setPosition(100, 30)
+    .setRange(0, 255)
+    ;
+
+  // 1. add an eraser button
+
+  // 2. add a slider for grayscale value
+  // use setValue() to set default grayscale value
+  // use setRange() to set a range of values for the slider
+
+  // 3. add sliders for RGB values
+
+  //4. add a slider for stroke thickness
+
+  state = 0;
+}
+
+void draw() {
+  //buffering
+}
+
+void mouseDragged() {
+  switch(state) {
+  case 0: //Default
+    break;
+  case 1: //Pencil
+    println("drawing");
+    strokeWeight(thickness);
+    stroke(grayScale);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+    break;
+  case 2: // eraser
+    println("erasing");
+    stroke(205);
+    fill(205);
+    ellipse(mouseX, mouseY, 10, 10);
+    break;
+  case 3: //coloring
+    println("coloring");
+    stroke(redColor, greenColor, blueColor);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+    break;
+  case 4: //thickness
+    println("Thickness");
+    strokeWeight(thickness);
+    stroke(redColor, greenColor, blueColor);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+    break;
+  }
+}
+//called when pencil button is pressed
+
+void pencil() {
+  println("pencil");
+  state = 1;
+}
+void coloring() {
+  println("coloring");
+  state=3;
+  println(state);
+  println(redColor);
+}
+void eraser() {
+  println("pencil");
+  state = 2;
+}
+void Thickness() {
+  println("Thickness");
+  println(state);
+  println(thickness);
+}
+
+
+//1. Define a controller function for eraser
+
+//2. Define a controller function for grayscale slider 
+//   *use the int value parameter to get the current value of the slider
+
+//3. Define controller functions for RGB sliders
+
+//4. Define controller functions for stroke thickness
