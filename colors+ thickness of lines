@@ -11,6 +11,15 @@ int redColor = 0;
 int blueColor = 0;
 int greenColor = 0;
 int thickness=0;
+int colorOneRed = 0;
+int colorOneBlue = 0;
+int colorOneGreen = 0;
+int colorTwoRed = 0;
+int colorTwoBlue = 0;
+int colorTwoGreen = 0;
+int coloring1;
+int coloring2;
+
 ControlP5 cp5;
 
 int state; 
@@ -22,7 +31,22 @@ void setup() {
   size(400, 600);
 
   cp5 = new ControlP5(this);
+  
+ cp5.addButton("coloring")
+    .setPosition(100, 160)
+    .setSize(200, 19)
+    ;
 
+ cp5.addButton("colorOne")
+    .setPosition(100, 120)
+    .setSize(200, 19)
+    ;
+     cp5.addButton("colorTwo")
+    .setPosition(100, 140)
+    .setSize(200, 19)
+    ;
+    
+    
   // create a new button with name 'pencil'
   cp5.addButton("pencil")
     .setPosition(100, 100)
@@ -37,7 +61,7 @@ void setup() {
     .setRange(0, 255)
     .setValue(128)
     ;
-  cp5.addButton("coloring")
+  cp5.addButton("colorOne")
     .setPosition(100, 120)
     .setSize(200, 19)
     ;
@@ -73,6 +97,12 @@ void setup() {
 
 void draw() {
   //buffering
+  fill(colorOneRed,colorOneGreen,colorOneBlue);
+  rect(5,360,40,40);
+  
+   fill(colorTwoRed,colorTwoGreen,colorTwoBlue);
+  rect(5,300,40,40);
+
 }
 
 void mouseDragged() {
@@ -93,6 +123,12 @@ void mouseDragged() {
     break;
   case 3: //coloring
     println("coloring");
+        strokeWeight(thickness);
+    stroke(redColor, greenColor, blueColor);
+    line(pmouseX, pmouseY, mouseX, mouseY);
+    break;
+     case 7: //coloring
+    println("coloring1");
     stroke(redColor, greenColor, blueColor);
     line(pmouseX, pmouseY, mouseX, mouseY);
     break;
@@ -102,21 +138,41 @@ void mouseDragged() {
     stroke(redColor, greenColor, blueColor);
     line(pmouseX, pmouseY, mouseX, mouseY);
     break;
+    case 5: //colorOne
+    println("colorOne");
+    colorOneRed = redColor;
+    colorOneGreen = greenColor;
+    colorOneBlue = blueColor;
+    break;
+    case 6: //colorOne
+    println("colorOne");
+    colorTwoRed = redColor;
+    colorTwoGreen = greenColor;
+    colorTwoBlue = blueColor;
   }
 }
 //called when pencil button is pressed
-
-void pencil() {
-  println("pencil");
-  state = 1;
-}
 void coloring() {
   println("coloring");
   state=3;
   println(state);
   println(redColor);
 }
-void eraser() {
+void pencil() {
+  println("pencil");
+  state = 1;
+}
+void colorOne() {
+  println("coloring1");
+  state=5;
+  println();
+  }
+   void colorTwo() {
+  println("coloring1");
+  state=6;
+  println();
+   }
+   void eraser() {
   println("pencil");
   state = 2;
 }
