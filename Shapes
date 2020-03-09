@@ -1,10 +1,4 @@
-/**
- * ControlP5 Button
- * this example shows how to create buttons with controlP5.
- * by Andreas Schlegel, 2012
- * www.sojamo.de/libraries/controlp5
- * example modified by Andrew Rose, 2019
- */
+// global vars color and buffer x/y and controlp5
 int x, y;
 PGraphics buffer;
 int grayScale = 0;
@@ -20,22 +14,20 @@ int colorTwoBlue = 255;
 int colorTwoGreen = 255;
 ControlP5 cp5;
 
-int state; 
-//0: default, no selection
-//1: pencil
-//2: eraser
-
+int state; // different cases
+int lineThickness = 3;
 void setup() {
   size(400, 600);
+  //create buffer
   cp5 = new ControlP5(this);
-  buffer = createGraphics(400, 600); //
+  buffer = createGraphics(400, 600); 
   buffer.beginDraw();
+  buffer.strokeWeight(lineThickness);
   buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
   buffer.background(205);
   buffer.endDraw();
-ellipseMode(CORNER);
-
-  // create a new button with name 'pencil'
+  ellipseMode(CORNER);
+// buttons for corresponding function
   cp5.addButton("pencil")
     .setPosition(100, 100)
     .setSize(200, 19)
@@ -49,6 +41,10 @@ ellipseMode(CORNER);
     .setRange(0, 255)
     .setValue(128)
     ;
+    cp5.addSlider("lineThickness")
+    .setPosition(100, 30)
+    .setRange(1, 20)
+    ;
   cp5.addButton("colorOne")
     .setPosition(100, 120)
     .setSize(200, 19)
@@ -61,11 +57,11 @@ ellipseMode(CORNER);
     .setPosition(100, 160)
     .setSize(200, 19)
     ;
-      cp5.addButton("Rectangle")
+  cp5.addButton("Rectangle")
     .setPosition(100, 180)
     .setSize(200, 19)
     ;
-          cp5.addButton("Ellipse")
+  cp5.addButton("Ellipse")
     .setPosition(100, 200)
     .setSize(200, 19)
     ;
@@ -81,41 +77,60 @@ ellipseMode(CORNER);
     .setPosition(100, 60)
     .setRange(0, 255)
     ;
-
-  // 1. add an eraser button
-
-  // 2. add a slider for grayscale value
-  // use setValue() to set default grayscale value
-  // use setRange() to set a range of values for the slider
-
-  // 3. add sliders for RGB values
-
-  //4. add a slider for stroke thickness
-
+// default state
   state = 0;
 }
+//functions switching states for different buttons/uses
+void pencil() {
+  println("pencil");
+  state = 1;
+}
+void colorOne() {
+  println("colorOne");
+  state=3;
+  println();
+}
+void colorTwo() {
+  println("colorTwo");
+  state=4;
+  println();
+}
+void eraser() {
+  println("eraser");
+  state = 2;
+}
+void Line() {
+  println("line");
+  state = 5;
+}
+void Rectangle() {
+  state = 6;
+}
+void Ellipse() {
+  state = 7;
+}
 
+//draw shapes
 void draw() {
   //buffering
   image(buffer, 0, 0);
   stroke(colorOneRed, colorOneGreen, colorOneBlue);
+  fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
   switch(state) {
-  case 5:
+  case 5: // line
     if (mousePressed)
       line(x, y, mouseX, mouseY); //show growth while the mouse is presssed
     break;
-     case 6:
-    if (mousePressed )
+  case 6: // rectangle
+    if (mousePressed)
       rect(x, y, mouseX-x, mouseY-y); //show growth while the mouse is presssed
     break;
-    case 7:
+  case 7: // ellipse
     if (mousePressed)
       ellipse(x, y, mouseX-x, mouseY-y); //show growth while the mouse is presssed
     break;
-  case 1:
-    
-    break;
   }
+  //diff color picker (custom)
   stroke(0);
   fill(colorOneRed, colorOneGreen, colorOneBlue);
   rect(20, 525, 50, 50);
@@ -124,7 +139,6 @@ void draw() {
   rect(50, 500, 50, 50);
 }
 
-
 void mouseDragged() {
   switch(state) {
   case 0: //Default
@@ -132,7 +146,7 @@ void mouseDragged() {
   case 1: //Pencil
     println("drawing");
     buffer.beginDraw();
-      buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+    buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
     buffer.line(pmouseX, pmouseY, mouseX, mouseY);
     buffer.endDraw();
     break;
@@ -144,61 +158,30 @@ void mouseDragged() {
     break;
   }
 }
-//called when pencil button is pressed
-
-void pencil() {
-  println("pencil");
-  state = 1;
-}
-void colorOne() {
-  println("coloring");
-  state=3;
-  println();
-}
-void colorTwo() {
-  println("coloring");
-  state=4;
-  println();
-}
-void eraser() {
-  println("pencil");
-  state = 2;
-}
-void Line() {
-  println("pencil");
-  state = 5;
-}
-void Rectangle(){
-state = 6;
-}
-void Ellipse(){
-state = 7;
-}
 
 void mousePressed() {
   //save intial anchor point of the line
-  switch(state){
+    x = mouseX;
+  y = mouseY;
+  switch(state) {
   case 3: //colorOne
     println("colorOne");
     colorOneRed = redColor;
     colorOneGreen = greenColor;
     colorOneBlue = blueColor;
     break;
-  case 4: //colorOne
-    println("colorOne");
+  case 4: //colorTwo
+    println("colorTwo");
     colorTwoRed = redColor;
     colorTwoGreen = greenColor;
     colorTwoBlue = blueColor;
     break;
   }
-  x = mouseX;
-  y = mouseY;
-  
 }
 
 void mouseReleased() {
   switch(state) {
-  case 1:
+  case 1: 
     buffer.beginDraw();
     buffer.line(pmouseX, pmouseY, mouseX, mouseY);
     buffer.endDraw();
@@ -210,15 +193,18 @@ void mouseReleased() {
     buffer.line(x, y, mouseX, mouseY);
     buffer.endDraw();
     break;
-    case 6:
-       buffer.beginDraw();
+  case 6:
+    buffer.beginDraw(); // rect
     buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+     buffer.fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
     buffer.rect(x, y, mouseX-x, mouseY-y);
     buffer.endDraw();
     break;
-     case 7:
-       buffer.beginDraw();
+  case 7: // ellipse
+    buffer.beginDraw();
     buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+    buffer. fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
+    buffer.ellipseMode(CORNER);
     buffer.ellipse(x, y, mouseX-x, mouseY-y);
     buffer.endDraw();
     break;
