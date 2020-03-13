@@ -1,0 +1,412 @@
+//Pixel Painter project with interactive GUI and pencil tool, eraser tool, shape tools,
+//line tool, three ways to choose colors, droplet, thickness and pixel tracker.
+// Right click = color 1, left click = color 2. Default colors can be used in 
+// any state. All other tools can only be used when respective button is pressed.
+// colorone/two  button using rgb sliders creates unique color. make sure to click anywhere
+// after u slide the sliders to save your color. line tool = color one fill, shapes = 
+// color1 outline color 2 fill. color pallette must be pressed and then click on
+// color pallette to choose any color. make sure to switch to state of your
+//tool after choosing colors, unless it is a default color square. droplet tool
+//works like colorpallette tool for whole sketch, right click = color one, left click = color two.
+
+// global vars color and buffer x/y and controlp5
+PImage colorScale;
+int x, y;
+float fillRed, fillGreen, fillBlue;
+PGraphics buffer;
+int grayScale = 0;
+import controlP5.*;
+float redColor = 255;
+float blueColor = 255;
+float greenColor = 255;
+float colorOneRed = 255;
+float colorOneBlue = 255;
+float colorOneGreen = 255;
+float colorTwoRed = 255;
+float colorTwoBlue = 255;
+float colorTwoGreen = 255;
+float lineThickness = 3;
+ControlP5 cp5;
+
+int state; // different cases
+
+void setup() {
+  size(1000, 600);
+  //create buffer
+  cp5 = new ControlP5(this);
+  buffer = createGraphics(1000, 600); 
+  buffer.beginDraw();
+  buffer.strokeWeight(lineThickness);
+  buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+  buffer.background(205);
+  buffer.endDraw();
+  ellipseMode(CORNER); // for ellipse tool
+  // buttons for corresponding function
+  cp5.addButton("pencil")
+    .setPosition(100, 100)
+    .setSize(200, 19)
+    ;
+  cp5.addButton("eraser")
+    .setPosition(100, 80)
+    .setSize(200, 19)
+    ;
+  cp5.addSlider("lineThickness")
+    .setPosition(100, 30)
+    .setRange(1, 20)
+    ;
+  cp5.addButton("colorOne")
+    .setPosition(100, 120)
+    .setSize(200, 19)
+    ;
+  ;
+  cp5.addButton("colorPalette")
+    .setPosition(380, 120)
+    .setSize(100, 19)
+    ;
+  cp5.addButton("droplet")
+    .setPosition(380, 270)
+    .setSize(100, 19)
+    ;
+  cp5.addButton("colorTwo")
+    .setPosition(100, 140)
+    .setSize(200, 19)
+    ;
+  cp5.addButton("Line")
+    .setPosition(100, 160)
+    .setSize(200, 19)
+    ;
+  cp5.addButton("Rectangle")
+    .setPosition(100, 180)
+    .setSize(200, 19)
+    ;
+  cp5.addButton("Ellipse")
+    .setPosition(100, 200)
+    .setSize(200, 19)
+    ;
+  cp5.addSlider("redColor")
+    .setPosition(100, 40)
+    .setRange(0, 255)
+    ;
+  cp5.addSlider("greenColor")
+    .setPosition(100, 50)
+    .setRange(0, 255)
+    ;
+  cp5.addSlider("blueColor")
+    .setPosition(100, 60)
+    .setRange(0, 255)
+    ;
+  colorScale = loadImage("color.jpg"); // load color scale
+  // default state
+  state = 0;
+}
+//functions switching states for different buttons/uses
+void pencil() {
+  println("pencil");
+  state = 1;
+}
+void colorOne() {
+  println("colorOne");
+  state=3;
+  println();
+}
+void colorTwo() {
+  println("colorTwo");
+  state=4;
+  println();
+}
+void eraser() {
+  println("eraser");
+  state = 2;
+}
+void Line() {
+  println("line");
+  state = 5;
+}
+void Rectangle() {
+  state = 6;
+}
+void Ellipse() {
+  state = 7;
+}
+void colorPalette() {
+  state = 8;
+}
+void droplet() {
+  state = 9;
+}
+//draw shapes, buffer, line, colorone/two square, default color pallette
+void draw() {
+  //buffering
+  image(buffer, 0, 0);
+  stroke(colorOneRed, colorOneGreen, colorOneBlue);
+  fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
+  strokeWeight(lineThickness);
+  switch(state) {
+  case 5: // line
+    if (mousePressed)
+      line(x, y, mouseX, mouseY); //show growth while the mouse is presssed
+    break;
+  case 6: // rectangle
+    if (mousePressed)
+      rect(x, y, mouseX-x, mouseY-y); //show growth while the mouse is presssed
+    break;
+  case 7: // ellipse
+    if (mousePressed)
+      ellipse(x, y, mouseX-x, mouseY-y); //show growth while the mouse is presssed
+    break;
+  }
+  //diff color picker (custom)
+  strokeWeight(2);
+  stroke(0);
+  fill(colorOneRed, colorOneGreen, colorOneBlue);
+  rect(20, 525, 50, 50);
+
+  fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
+  rect(50, 500, 50, 50);
+
+//default color pallette changes colorone/two based on right/left mouse clicks and mouse pos
+  if (mouseButton == RIGHT && mousePressed && mouseX>=360 && mouseX<=380 && mouseY >=40 && mouseY<=60) {
+    colorOneRed = 255;
+    colorOneBlue = 0;
+    colorOneGreen = 0;
+  }
+
+  if (mouseButton == RIGHT && mousePressed && mouseX>=400 && mouseX<=420 && mouseY >=40 && mouseY<=60) {
+    colorOneRed = 255;
+    colorOneBlue = 0;
+    colorOneGreen = 150;
+  }
+  fill(255, 0, 0);
+  rect(360, 40, 20, 20);
+
+  fill(255, 150, 0);
+  rect(400, 40, 20, 20);
+  if (mouseButton == RIGHT && mousePressed && mouseX>=440 && mouseX<=460 && mouseY >=40 && mouseY<=60) {
+    colorOneRed = 255;
+    colorOneBlue = 0;
+    colorOneGreen = 255;
+  }
+  fill(255, 255, 0);
+  rect(440, 40, 20, 20);
+  if (mouseButton == RIGHT && mousePressed && mouseX>=480 && mouseX<=500 && mouseY >=40 && mouseY<=60) {
+    colorOneRed = 0;
+    colorOneBlue = 0;
+    colorOneGreen = 255;
+  }
+  fill(0, 255, 0);
+  rect(480, 40, 20, 20);
+
+  if (mouseButton == RIGHT && mousePressed && mouseX>=360 && mouseX<=380 && mouseY >=80 && mouseY<=100) {
+    colorOneRed = 0;
+    colorOneBlue = 255;
+    colorOneGreen = 0;
+  }
+
+  if (mouseButton == RIGHT && mousePressed && mouseX>=400 && mouseX<=420 && mouseY >=80 && mouseY<=100) {
+    colorOneRed = 153;
+    colorOneBlue = 204;
+    colorOneGreen = 50;
+  }
+  fill(0, 0, 255);
+  rect(360, 80, 20, 20);
+
+  fill(153, 50, 204);
+  rect(400, 80, 20, 20);
+  if (mouseButton == RIGHT && mousePressed && mouseX>=440 && mouseX<=460 && mouseY >=80 && mouseY<=100) {
+    colorOneRed = 238;
+    colorOneBlue = 238;
+    colorOneGreen = 130;
+  }
+  fill(238, 130, 238);
+  rect(440, 80, 20, 20);
+  if (mouseButton == RIGHT && mousePressed && mouseX>=480 && mouseX<=500 && mouseY >=80 && mouseY<=100) {
+    colorOneRed = 0;
+    colorOneBlue = 0;
+    colorOneGreen = 0;
+  }
+  fill(0, 0, 0);
+  rect(480, 80, 20, 20);
+  if (mouseButton == LEFT && mousePressed && mouseX>=360 && mouseX<=380 && mouseY >=40 && mouseY<=60) {
+    colorTwoRed = 255;
+    colorTwoBlue = 0;
+    colorTwoGreen = 0;
+  }
+
+  if (mouseButton == LEFT && mousePressed && mouseX>=400 && mouseX<=420 && mouseY >=40 && mouseY<=60) {
+    colorTwoRed = 255;
+    colorTwoBlue = 0;
+    colorTwoGreen = 150;
+  }
+  fill(255, 0, 0);
+  rect(360, 40, 20, 20);
+
+  fill(255, 150, 0);
+  rect(400, 40, 20, 20);
+  if (mouseButton == LEFT && mousePressed && mouseX>=440 && mouseX<=460 && mouseY >=40 && mouseY<=60) {
+    colorTwoRed = 255;
+    colorTwoBlue = 0;
+    colorTwoGreen = 255;
+  }
+  fill(255, 255, 0);
+  rect(440, 40, 20, 20);
+  if (mouseButton == LEFT && mousePressed && mouseX>=480 && mouseX<=500 && mouseY >=40 && mouseY<=60) {
+    colorTwoRed = 0;
+    colorTwoBlue = 0;
+    colorTwoGreen = 255;
+  }
+  fill(0, 255, 0);
+  rect(480, 40, 20, 20);
+
+  if (mouseButton == LEFT && mousePressed && mouseX>=360 && mouseX<=380 && mouseY >=80 && mouseY<=100) {
+    colorTwoRed = 0;
+    colorTwoBlue = 255;
+    colorTwoGreen = 0;
+  }
+
+  if (mouseButton == LEFT && mousePressed && mouseX>=400 && mouseX<=420 && mouseY >=80 && mouseY<=100) {
+    colorTwoRed = 153;
+    colorTwoBlue = 204;
+    colorTwoGreen = 50;
+  }
+  fill(0, 0, 255);
+  rect(360, 80, 20, 20);
+
+  fill(153, 50, 204);
+  rect(400, 80, 20, 20);
+  if (mouseButton == LEFT && mousePressed && mouseX>=440 && mouseX<=460 && mouseY >=80 && mouseY<=100) {
+    colorTwoRed = 238;
+    colorTwoBlue = 238;
+    colorTwoGreen = 130;
+  }
+  fill(238, 130, 238);
+  rect(440, 80, 20, 20);
+  if (mouseButton == LEFT && mousePressed && mouseX>=480 && mouseX<=500 && mouseY >=80 && mouseY<=100) {
+    colorTwoRed = 0;
+    colorTwoBlue = 0;
+    colorTwoGreen = 0;
+  }
+  fill(0, 0, 0);
+  rect(480, 80, 20, 20);
+  //draw color scale
+  fill(100, 100, 100);
+  image(colorScale, 360, 150, 150, 100);
+}
+
+void mouseDragged() { 
+  switch(state) {
+  case 0: //Default
+    break;
+  case 1: //Pencil right/left colorone/colortwo and buffer
+    if (mouseButton == RIGHT && mousePressed) {
+      fillRed=colorOneRed;
+      fillBlue=colorOneBlue;
+      fillGreen=colorOneGreen;
+    }
+    if (mouseButton == LEFT && mousePressed) {
+      fillRed=colorTwoRed;
+      fillBlue=colorTwoBlue;
+      fillGreen=colorTwoGreen;
+    }
+    println("drawing");
+    buffer.beginDraw();
+    buffer.strokeWeight(lineThickness);
+    buffer.stroke(fillRed, fillGreen, fillBlue);
+    buffer.line(pmouseX, pmouseY, mouseX, mouseY);
+    buffer.endDraw();
+    break;
+  case 2: // eraser buffer
+    println("erasing");
+    buffer.beginDraw();
+    buffer.stroke(205);
+    buffer.fill(205);
+    buffer.strokeWeight(lineThickness);
+    buffer.stroke(colorTwoRed,colorTwoGreen,colorTwoBlue);
+    buffer.ellipse(mouseX, mouseY, 10, 10);
+    buffer.endDraw();
+    break;
+  }
+}
+
+void mousePressed() { //for changing colorone/two
+  //save intial anchor point of the line
+  x = mouseX;
+  y = mouseY;
+  switch(state) {
+  case 3: //colorOne
+    println("colorOne");
+    colorOneRed = redColor;
+    colorOneGreen = greenColor;
+    colorOneBlue = blueColor;
+    break;
+  case 4: //colorTwo
+    println("colorTwo");
+    colorTwoRed = redColor;
+    colorTwoGreen = greenColor;
+    colorTwoBlue = blueColor;
+    break;
+  case 8: //color scale right/left colorone/colortwo using get function
+    //  image(colorScale,360,150,150,100);
+    if (mouseX>=360 && mouseX<=510 && mouseY>=150 && mouseY<=250 && mouseButton==RIGHT) {
+      int rgb = get(mouseX, mouseY);
+      colorOneRed = red(rgb);
+      colorOneGreen = green(rgb);
+      colorOneBlue = blue(rgb);
+    }
+    else if(mouseX>=360 && mouseX<=510 && mouseY>=150 && mouseY<=250 && mouseButton==LEFT){
+         int rgb = get(mouseX, mouseY);
+      colorTwoRed = red(rgb);
+      colorTwoGreen = green(rgb);
+      colorTwoBlue = blue(rgb);
+    }
+    break;
+  case 9: // droplet based on right/left mouse using get function
+    if (mouseX >=100 && mouseX<=350 && mouseY>10 && mouseY<250) {
+    } else if (mouseButton==RIGHT) {
+      int rgb = get(mouseX, mouseY);
+      colorOneRed = red(rgb);
+      colorOneGreen = green(rgb);
+      colorOneBlue = blue(rgb);
+    } else {
+      int rgb = get(mouseX, mouseY);
+      colorTwoRed = red(rgb);
+      colorTwoGreen = green(rgb);
+      colorTwoBlue = blue(rgb);
+    }
+  }
+}
+
+void mouseReleased() {
+  switch(state) {
+  case 1:  //pencil
+    buffer.beginDraw();
+    buffer.line(pmouseX, pmouseY, mouseX, mouseY);
+    buffer.endDraw();
+    break;
+  case 5:
+    //add line to buffer!
+    buffer.beginDraw();
+    buffer.strokeWeight(lineThickness);
+    buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+    buffer.line(x, y, mouseX, mouseY);
+    buffer.endDraw();
+    break;
+  case 6:
+    buffer.beginDraw(); // rect
+    buffer.strokeWeight(lineThickness);
+    buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+    buffer.fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
+    buffer.rect(x, y, mouseX-x, mouseY-y);
+    buffer.endDraw();
+    break;
+  case 7: // ellipse
+    buffer.beginDraw();
+    buffer.strokeWeight(lineThickness);
+    buffer.stroke(colorOneRed, colorOneGreen, colorOneBlue);
+    buffer. fill(colorTwoRed, colorTwoGreen, colorTwoBlue);
+    buffer.ellipseMode(CORNER);
+    buffer.ellipse(x, y, mouseX-x, mouseY-y);
+    buffer.endDraw();
+    break;
+  }
+}
+// thats it! have fun
